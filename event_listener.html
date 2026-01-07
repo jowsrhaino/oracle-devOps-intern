@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background: magenta;
+        text-align: center;
+        padding-top: 50px;
+    }
+    .container {
+        background: linear-gradient(to bottom, #f9f9f9, #e9e9e9);
+        width: 400px;
+        margin: 0 auto 20px auto;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    input, select {
+        margin: 10px;
+    }
+    #eventButton {
+        background-color:gray;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 350px;
+        height: 40px;
+    }    #output {
+        margin-top: 20px;
+        font-size: 16px;
+        color: blue;
+        text-align: center;
+    }</style>
+<body align="justify">
+    <form class="container">
+    username:<input type="text" name="username" id="username"><br><br>
+    password:<input type="password" name="password" id="password"><br><br>
+    role:
+    <select name="role" id="role" size="1">
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="guest">Guest</option>
+        <option value="superadmin">Super Admin</option>
+        <option value="moderator">Moderator</option>
+    </select><br><br>
+    <input type="button" value="button user for event listener" id="eventButton" width="auto" height="50px"><br><br>
+    <input type="submit" value="submit" name="submit"align="center"><np&bsp>
+    <input type="reset" value="reset" align="center">
+    </form>
+    <div id="output">
+        <p id="outputText"></p>
+    </div>
+    <div class="content-section">
+        <h2>About This Form</h2>
+        <p>This is a demonstration of various JavaScript event listeners. The form above allows you to input username, password, and select a role. The event button showcases multiple mouse and interaction events.</p>
+        <p>Below is additional content to make the page scrollable, allowing you to test the scroll and resize events. As you interact with the page, the output area above will update with event information.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>Scroll down further to see more content and test the scroll event functionality.</p>
+        <p>Additional paragraph to ensure sufficient height for scrolling. The scroll event will trigger whenever you scroll this page, updating the output in real-time.</p>
+        <h3>Event Listeners Explained</h3>
+        <p>Event listeners are functions that wait for specific events to occur on HTML elements. In this demonstration, we've attached listeners to various elements and the window object.</p>
+        <p>For example, the username input has listeners for keydown, keyup, focus, blur, and input events. Each time one of these events fires, the output area updates with relevant information.</p>
+        <p>The event button demonstrates mouse events like click, mouseover, mouseout, mousedown, mouseup, and contextmenu. Try hovering over it, clicking it, and right-clicking to see different messages.</p>
+        <p>Window-level events like load, scroll, and resize are also monitored. The load event triggers when the page finishes loading, scroll when you scroll the page, and resize when you change the browser window size.</p>
+        <h3>Form Validation</h3>
+        <p>While not implemented here, event listeners are commonly used for form validation. You could add listeners to check input values in real-time or on form submission.</p>
+        <p>For instance, an input event listener could validate email formats or password strength as the user types, providing immediate feedback.</p>
+        <p>Submit event listeners can prevent form submission if validation fails, ensuring data integrity before sending to a server.</p>
+        <h3>Best Practices</h3>
+        <p>When using event listeners, it's important to consider performance. Events like scroll and resize can fire very frequently, so debounce techniques may be necessary to avoid overwhelming the browser.</p>
+        <p>Always clean up event listeners when they're no longer needed, especially for dynamically created elements, to prevent memory leaks.</p>
+        <p>Use event delegation for multiple similar elements to improve performance and reduce code duplication.</p>
+        <p>Continue scrolling to see more information about JavaScript events and best practices for web development.</p>
+        <h3>Advanced Event Handling</h3>
+        <p>JavaScript provides many more events beyond what's demonstrated here. Custom events can be created using the CustomEvent constructor for complex applications.</p>
+        <p>Event propagation (bubbling and capturing) allows for sophisticated event management in nested element structures.</p>
+        <p>Modern frameworks like React, Vue, and Angular provide their own event handling systems that abstract away some of the complexity of native DOM events.</p>
+        <p>Understanding event loops and asynchronous programming is crucial for building responsive web applications that handle user interactions smoothly.</p>
+        <h3>Conclusion</h3>
+        <p>This page serves as an interactive demonstration of JavaScript event listeners. By experimenting with the form and scrolling through this content, you can see how various events trigger different behaviors.</p>
+        <p>Event-driven programming is fundamental to modern web development, enabling dynamic and interactive user experiences.</p>
+        <p>Feel free to inspect the source code to understand how these event listeners are implemented and experiment with adding your own.</p>
+    </div>
+    <script>
+        a=document.getElementById("eventButton");
+        a.addEventListener("click", function() {
+            document.getElementById("outputText").innerText = "Button was clicked!";
+        });
+        a.addEventListener("mouseover", function() {
+            a.style.backgroundColor = "blue";
+        });
+        a.addEventListener("mouseout", function() {
+            a.style.backgroundColor = "gray";
+        });
+        a.addEventListener("dblclick", function() {
+            document.getElementById("outputText").innerText = "Button was double-clicked!";
+        });
+        a.addEventListener("mousedown", function() {
+            document.getElementById("outputText").innerText = "Mouse button is pressed down on the button!";
+        });
+        a.addEventListener("mouseup", function() {
+            document.getElementById("outputText").innerText = "Mouse button is released on the button!";
+        });
+        a.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+            document.getElementById("outputText").innerText = "Right-click context menu is disabled on this button!";
+        });
+        b=document.getElementById("username");
+        b.addEventListener("keydown", function(event) {
+            document.getElementById("outputText").innerText = "Key pressed: " + event.key;
+
+        });
+        b.addEventListener("keyup", function(event) {
+            document.getElementById("outputText").innerText = "Key released: " + event.key;
+        });
+        b.addEventListener("focus", function() {
+            document.getElementById("outputText").innerText = "Username input field is focused!";
+        });
+        b.addEventListener("blur", function() {
+            document.getElementById("outputText").innerText = "Username input field lost focus!";
+        });
+        window.addEventListener("load", function() {
+            document.getElementById("outputText").innerText = "Page loaded!";
+        });
+        window.addEventListener("unload", function() {
+            console.log("Page unloaded!");
+        });
+        window.addEventListener("scroll", function() {
+            document.getElementById("outputText").innerText = "Page scrolled!";
+        });
+        window.addEventListener("resize", function() {
+            document.getElementById("outputText").innerText = "Window resized!";
+        });
+        document.getElementById("role").addEventListener("change", function() {
+            document.getElementById("outputText").innerText = "Role changed to: " + this.value;
+        });
+        document.getElementById("username").addEventListener("input", function() {
+            document.getElementById("outputText").innerText = "Username input changed!";
+        });
+       
+        
+        document.querySelector('input[type="reset"]').addEventListener("click", function() {
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("outputText").innerText = "Reset button clicked!";
+        });
+        window.addEventListener("unload", function() {
+            console.log("Page has unloaded at " + new Date().toISOString());
+        });
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+             username = document.getElementById('username').value;
+             password = document.getElementById('password').value;
+             role = document.getElementById('role').value;
+            alert("Form submitted!\nUsername: " + username + "\nPassword: " + password + "\nRole: " + role);
+        });
+    </script>
+</body>
+</html>
