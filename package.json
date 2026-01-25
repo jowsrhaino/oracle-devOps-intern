@@ -1,0 +1,31 @@
+{
+  "name": "oracle-devops-intern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jowsrhaino/oracle-devOps-intern.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jowsrhaino/oracle-devOps-intern/issues"
+  },
+  "homepage": "https://github.com/jowsrhaino/oracle-devOps-intern#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-router": "^0.0.1",
+    "express-session": "^1.18.2",
+    "i": "^0.3.7",
+    "mongoose": "^9.1.4",
+    "node": "^25.3.0",
+    "router": "^2.2.0",
+    "session": "^0.1.0"
+  }
+}
