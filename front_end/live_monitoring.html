@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live ECG Monitoring</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+canvas {
+    background:
+      linear-gradient(#1f1f1f 1px, transparent 1px),
+      linear-gradient(90deg, #1f1f1f 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Live Patient Monitoring</h1>
+    <p>Real-Time ECG Monitoring</p>
+</header>
+
+<nav>
+    <a href="/doctor_dashboard">Dashboard</a>
+    <a href="/doctor/live_monitoring">Live Monitoring</a>
+    <a href="/login">Logout</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Select Patient</h3>
+        <select id="patientSelect">
+            <option value="">Loading patients...</option>
+        </select>
+    </div>
+
+    <div class="card">
+        <h3>Current Status</h3>
+        <p>Heart Rate: <b><span id="hr">--</span> bpm</b></p>
+        <p>Temperature: <b><span id="temp">--</span> °C</b></p>
+        <p>Oxygen: <b><span id="oxy">--</span> %</b></p>
+        <p>Status: <b><span id="status">--</span></b></p>
+    </div>
+
+    <div class="card">
+        <h3>Live ECG</h3>
+        <canvas id="ecgChart"></canvas>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<script>
+/* ---------------- ECG Chart Setup ---------------- */
+const BUFFER_SIZE = 120;
+const ctx = document.getElementById("ecgChart").getContext("2d");
+
+const ecgChart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: Array(BUFFER_SIZE).fill(""),
+        datasets: [{
+            label: "ECG",
+            data: Array(BUFFER_SIZE).fill(60),
+            borderColor: "lime",
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: 0,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: false,
+        scales: {
+            y: { min: 20, max: 130 }
+        }
+    }
+});
+
+/* ---------------- Load Doctor Assigned Patients ---------------- */
+async function loadPatients() {
+    try {
+        const res = await fetch("/doctor/patients");
+        if (res.status === 401) {
+            alert("Session expired");
+            window.location.href = "/login";
+            return;
+        }
+
+        const patients = await res.json();
+        const select = document.getElementById("patientSelect");
+
+        select.innerHTML = '<option value="">Select Patient</option>';
+
+        if (patients.length === 0) {
+            select.innerHTML += '<option>No patients assigned</option>';
+            return;
+        }
+
+        patients.forEach(p => {
+            select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load patients");
+    }
+}
+
+loadPatients();
+
+/* ---------------- Live ECG Fetch ---------------- */
+let intervalId = null;
+
+document.getElementById("patientSelect").addEventListener("change", () => {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(fetchVitals, 1000);
+});
+
+async function fetchVitals() {
+    const patientId = document.getElementById("patientSelect").value;
+    if (!patientId) return;
+
+    try {
+        const res = await fetch(`/live-vitals/${patientId}`);
+        const data = await res.json();
+        if (!data) return;
+
+        document.getElementById("hr").innerText = data.heart_rate;
+        document.getElementById("temp").innerText = data.temperature;
+        document.getElementById("oxy").innerText = data.oxygen;
+
+        const statusEl = document.getElementById("status");
+        statusEl.innerText = data.status;
+        statusEl.className =
+            data.status === "Critical" ? "status-critical" : "status-normal";
+
+        // 🔴 REAL ECG SCROLL
+        data.ecg.forEach(point => {
+            ecgChart.data.datasets[0].data.push(point);
+            ecgChart.data.datasets[0].data.shift();
+        });
+
+        ecgChart.data.datasets[0].borderColor =
+            data.status === "Critical" ? "red" : "lime";
+
+        ecgChart.update();
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+</script>
+
+</body>
+</html>

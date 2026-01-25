@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+    <h1>Patient Dashboard</h1>
+    <p>Live Patient Monitoring System</p>
+</header>
+
+<!-- ================= NAV ================= -->
+<nav>
+    <a href="/patient_dashboard.html">Dashboard</a>
+    <a href="/login.html">Logout</a>
+</nav>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="container">
+
+    <!-- Patient Profile -->
+    <div class="card">
+        <h3>My Profile</h3>
+        <p><b>Name:</b> <span id="name">Loading...</span></p>
+        <!-- <p><b>Age:</b> <span id="age">Loading...</span></p>
+        <p><b>Gender:</b> <span id="gender">Loading...</span></p> -->
+    </div>
+
+    <!-- Health Status -->
+    <div class="card">
+        <h3>Current Health Status</h3>
+        <p>Heart Rate: <b><span id="heart_rate">--</span> bpm</b></p>
+        <p>Temperature: <b><span id="temperature">--</span> °C</b></p>
+        <p>Oxygen Level: <b><span id="oxygen">--</span> %</b></p>
+        <p>Status:
+            <b><span id="status">--</span></b>
+        </p>
+    </div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+fetch("/patient/dashboard")
+.then(res => {
+    if (res.status === 401) {
+        alert("Please login again");
+        window.location.href = "/login.html";
+        return;
+    }
+    return res.json();
+})
+.then(data => {
+
+    document.getElementById("name").innerText = data.name;
+    // document.getElementById("age").innerText = data.age;
+    // document.getElementById("gender").innerText = data.gender;
+
+    document.getElementById("heart_rate").innerText = data.heart_rate;
+    document.getElementById("temperature").innerText = data.temperature;
+    document.getElementById("oxygen").innerText = data.oxygen;
+
+    const statusEl = document.getElementById("status");
+    statusEl.innerText = data.status;
+    statusEl.className =
+        data.status === "Critical"
+            ? "status-critical"
+            : "status-normal";
+});
+</script>
+
+</body>
+</html>

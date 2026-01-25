@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Patients | Admin Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Assign Patients to Doctors/Nurses</h1>
+</header>
+
+<nav>
+    <a href="/admin">Dashboard</a>
+    <a href="/admin/users">Manage Users</a>
+    <a href="#">Assign Patients</a>
+    <a href="/login">Logout</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Assign Patient</h3>
+        <form id="assignForm">
+            <label>Patient</label>
+            <select id="patient" required>
+                <option value="">Select Patient</option>
+            </select>
+
+            <label>Doctor</label>
+            <select id="doctor">
+                <option value="">Select Doctor</option>
+            </select>
+
+            <label>Nurse</label>
+            <select id="nurse">
+                <option value="">Select Nurse</option>
+            </select>
+
+            <button type="submit" class="btn">Assign</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+/* Load patients, doctors, nurses */
+function loadData() {
+    fetch("/admin/patients")
+    .then(res => res.json())
+    .then(p => {
+        const sel = document.getElementById("patient");
+        sel.innerHTML = '<option value="">Select Patient</option>';
+        p.forEach(pt => {
+            sel.innerHTML += `<option value="${pt.id}">${pt.name}</option>`;
+        });
+    });
+
+    fetch("/admin/doctors")
+    .then(res => res.json())
+    .then(d => {
+        const sel = document.getElementById("doctor");
+        sel.innerHTML = '<option value="">Select Doctor</option>';
+        d.forEach(doc => {
+            sel.innerHTML += `<option value="${doc.id}">${doc.name}</option>`;
+        });
+    });
+
+    fetch("/admin/nurses")
+    .then(res => res.json())
+    .then(n => {
+        const sel = document.getElementById("nurse");
+        sel.innerHTML = '<option value="">Select Nurse</option>';
+        n.forEach(nr => {
+            sel.innerHTML += `<option value="${nr.id}">${nr.name}</option>`;
+        });
+    });
+}
+
+document.getElementById("assignForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const payload = {
+        patientId: document.getElementById("patient").value,
+        doctorId: document.getElementById("doctor").value,
+        nurseId: document.getElementById("nurse").value
+    };
+    fetch("/admin/assign", {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(payload)
+    })
+    .then(res=>res.json())
+    .then(msg=>{
+        alert(msg.message);
+        loadData();
+    });
+});
+
+loadData();
+</script>
+
+</body>
+</html>

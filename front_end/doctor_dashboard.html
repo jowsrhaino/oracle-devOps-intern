@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Doctor Dashboard</h1>
+    <p>Live Patient Monitoring System</p>
+</header>
+
+<nav>
+    <a href="/doctor_dashboard">Dashboard</a>
+    <a href="/doctor/live_monitoring">Live Monitoring</a>
+    <a href="/doctor/reports">Reports</a>
+    <a href="/login">Logout</a>
+</na
+
+<div class="container">
+    <div class="card">
+        <h3>Assigned Patients</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Heart Rate</th>
+                    <th>Temperature</th>
+                    <th>Oxygen</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="patientData">
+                <tr>
+                    <td colspan="7">Loading data from database...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<script>
+
+    
+fetch("/doctor/my-patients")
+.then(res => {
+    if (res.status === 401) {
+        alert("Please login again");
+        window.location.href = "/login";
+    }
+    return res.json();
+})
+.then(data => {
+    const tbody = document.getElementById("patientData");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7">No patients assigned</td>
+            </tr>`;
+        return;
+    }
+
+    data.forEach(p => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${p.name}</td>
+                <td>${p.age}</td>
+                <td>${p.gender}</td>
+                <td>${p.heart_rate}</td>
+                <td>${p.temperature}</td>
+                <td>${p.oxygen}</td>
+                <td class="${p.status === 'Critical' ? 'status-critical' : 'status-normal'}">
+                    ${p.status}
+                </td>
+            </tr>
+        `;
+    });
+});
+</script>
+
+
+</body>
+</html>

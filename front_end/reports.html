@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports | Live Patient Monitoring System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Patient Reports</h1>
+    <p>Analyze Historical Vitals & Trends</p>
+</header>
+
+<!-- Navigation -->
+<nav>
+    <a href="/doctor_dashboard">Dashboard</a>
+    <a href="/doctor/live_monitoring">Live Monitoring</a>
+    <a href="/doctor/reports">Reports</a>
+    <a href="/login">Logout</a>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+
+    <!-- Patient Selection -->
+    <div class="card">
+        <h3>Select Patient</h3>
+        <select id="patientSelect">
+            <option value="">Loading patients...</option>
+        </select>
+    </div>
+
+    <!-- Historical Vitals Chart -->
+    <div class="card">
+        <h3>Vitals History</h3>
+        <canvas id="vitalsHistoryChart"></canvas>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<!-- JavaScript -->
+<script>
+const ctx = document.getElementById("vitalsHistoryChart").getContext("2d");
+
+const vitalsHistoryChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            { label: 'Heart Rate', data: [], borderColor: 'red', fill: false },
+            { label: 'Temperature', data: [], borderColor: 'orange', fill: false },
+            { label: 'Oxygen Level', data: [], borderColor: 'green', fill: false }
+        ]
+    },
+    options: {
+        responsive: true,
+        animation: false
+    }
+});
+
+/* ================= Load assigned patients ================= */
+fetch("/doctor/assigned-patients")
+.then(res => {
+    if (res.status === 401) {
+        alert("Login again");
+        window.location.href = "/login";
+        return;
+    }
+    return res.json();
+})
+.then(data => {
+    const select = document.getElementById("patientSelect");
+    select.innerHTML = '<option value="">Select Patient</option>';
+
+    if (data.length === 0) {
+        select.innerHTML += '<option>No patients assigned</option>';
+        return;
+    }
+
+    data.forEach(p => {
+        select.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+    });
+});
+
+/* ================= Load reports ================= */
+document.getElementById("patientSelect").addEventListener("change", function () {
+    const patientId = this.value;
+    if (!patientId) return;
+
+    fetch(`/doctor/reports/${patientId}`)
+    .then(res => res.json())
+    .then(data => {
+        vitalsHistoryChart.data.labels = data.timestamps;
+        vitalsHistoryChart.data.datasets[0].data = data.heart_rate;
+        vitalsHistoryChart.data.datasets[1].data = data.temperature;
+        vitalsHistoryChart.data.datasets[2].data = data.oxygen;
+        vitalsHistoryChart.update();
+    });
+});
+
+async function loadReports(patientId) {
+    const res = await fetch(`/doctor/reports/${patientId}`);
+    const data = await res.json();
+
+    console.log(data);}
+</script>
+
+
+</body>
+</html>
+                    <td class="${p.status === 'Critical' ? 'status-critical' : 'status-normal'}">
+                        ${p.status || "-"}

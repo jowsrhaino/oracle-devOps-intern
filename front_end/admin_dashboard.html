@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Admin Dashboard</h1>
+</header>
+
+<nav>
+    <a href="#">Dashboard</a>
+    <a href="/admin/users">Manage Users</a>
+    <a href="/admin/assign">Assign Patients</a>
+    <a href="login.html">Logout</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+        <h3>Total Patients</h3>
+        <p id="patients">Loading...</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Doctors</h3>
+        <p id="doctors">Loading...</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>Admin Panel</p>
+</footer>
+
+</body>
+</html>
+<script>
+    window.onload = function() {
+        fetch("/admin/user-counts")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("patients").innerText = data.patients;
+            document.getElementById("doctors").innerText = data.doctors;
+            document.getElementById("nurses").innerText = data.nurses;
+        });
+    }
+</script>
+<script>
+function loadCounts() {
+    fetch("/admin/user-counts")
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("patients").innerText = data.patients;
+        document.getElementById("doctors").innerText = data.doctors;
+        document.getElementById("nurses").innerText = data.nurses;
+    })
+    .catch(err => {
+        console.error("Error loading counts:", err);
+        document.getElementById("patients").innerText = "-";
+        document.getElementById("doctors").innerText = "-";
+        document.getElementById("nurses").innerText = "-";
+    });
+}
+
+// Load counts when page loads
+window.onload = loadCounts;
+</script>
+

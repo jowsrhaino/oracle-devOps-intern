@@ -1,0 +1,189 @@
+/* =========================
+   COMMON STYLES
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+/* =========================
+   HEADER
+========================= */
+header {
+    background-color: #0a9396;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 28px;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+nav {
+    background-color: #005f73;
+    padding: 12px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   CONTAINERS
+========================= */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+    background-color: #0a9396;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn:hover {
+    background-color: #007f85;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-danger {
+    background-color: #d62828;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* =========================
+   FORMS
+========================= */
+.form-box {
+    background-color: white;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #005f73;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* =========================
+   DASHBOARD CARDS
+========================= */
+.card {
+    background-color: white;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    color: #005f73;
+}
+
+/* =========================
+   TABLE
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #005f73;
+    color: white;
+}
+
+/* =========================
+   STATUS COLORS
+========================= */
+.status-normal {
+    color: green;
+    font-weight: bold;
+}
+
+.status-critical {
+    color: red;
+    font-weight: bold;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    background-color: #005f73;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+}

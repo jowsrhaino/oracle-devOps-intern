@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h2>My Profile</h2>
+
+<form id="profileForm">
+    <label>Name</label>
+    <input type="text" id="name" required>
+
+    <label>Email</label>
+    <input type="email" id="email" required>
+
+    <button type="submit">Update Profile</button>
+</form>
+
+<hr>
+
+<h3>Change Password</h3>
+
+<form id="passwordForm">
+    <label>New Password</label>
+    <input type="password" id="password" required>
+
+    <button type="submit">Change Password</button>
+</form>
+
+<script>
+let userId = null;
+
+/* Load logged-in user profile */
+fetch("/profile/me")
+.then(res => res.json())
+.then(data => {
+    userId = data.id;
+    document.getElementById("name").value = data.name;
+    document.getElementById("email").value = data.email;
+});
+
+/* Update profile */
+document.getElementById("profileForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    fetch("/profile/update/" + userId, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value
+        })
+    })
+    .then(res => res.json())
+    .then(msg => alert(msg.message));
+});
+
+/* Change password */
+document.getElementById("passwordForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    fetch("/profile/update/" + userId, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            password: document.getElementById("password").value
+        })
+    })
+    .then(res => res.json())
+    .then(msg => alert(msg.message));
+});
+</script>
+
+</body>
+</html>

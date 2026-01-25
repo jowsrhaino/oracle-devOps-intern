@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Live Patient Monitoring System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Live Patient Monitoring System</h1>
+        <p>User Registration Portal</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="form-box">
+        <h2>Create Account</h2>
+
+       <form action="/register" method="POST">
+
+    <label>Full Name</label>
+    <input type="text" name="fullname" placeholder="Enter full name" required>
+
+    <label>Email</label>
+    <input type="email" name="email" placeholder="Enter email address" required>
+
+    <label>Username</label>
+    <input type="text" name="username" placeholder="Choose a username" required>
+
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Create password" required>
+
+    <label>Confirm Password</label>
+    <input type="password" name="confirmPassword" placeholder="Re-enter password" required>
+
+    <label>User Role</label>
+    <select name="role" required>
+        <option value="">Select Role</option>
+        <option>Patient</option>
+    </select>
+
+    <button type="submit" class="btn" style="width:100%;">Register</button>
+</form>
+
+
+        <p style="text-align:center; margin-top:15px;">
+            Already have an account?
+            <a href="/login">Login</a>
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Live Patient Monitoring System</p>
+    </footer>
+
+</body>
+</html>

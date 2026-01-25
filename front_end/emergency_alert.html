@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Alerts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Emergency Alert System</h1>
+    <p>Critical Patient Condition Notifications</p>
+</header>
+
+<!-- Navigation -->
+<nav>
+    <a href="doctor_dashboard.html">Dashboard</a>
+    <a href="live_monitoring.html">Live Monitoring</a>
+    <a href="emergency_alert.html">Emergency Alerts</a>
+    <a href="login.html">Logout</a>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+
+    <div class="card">
+        <h3>🚨 Active Emergency Alerts</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Patient Name</th>
+                    <th>Alert Type</th>
+                    <th>Vital Value</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="alertTable">
+                <tr>
+                    <td colspan="6" style="text-align:center;">
+                        Loading alerts from database...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<!-- JavaScript (Frontend Only) -->
+<script>
+fetch("http://127.0.0.1:5000/emergency-alerts")
+.then(response => response.json())
+.then(data => {
+    const table = document.getElementById("alertTable");
+    table.innerHTML = "";
+
+    if (data.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center;">No emergency alerts</td>
+            </tr>
+        `;
+        return;
+    }
+
+    data.forEach(alert => {
+        table.innerHTML += `
+            <tr class="alert-row">
+                <td>${alert.patient_id}</td>
+                <td>${alert.patient_name}</td>
+                <td>${alert.alert_type}</td>
+                <td>${alert.value}</td>
+                <td class="status-critical">Critical</td>
+                <td>
+                    <button class="btn">Acknowledge</button>
+                </td>
+            </tr>
+        `;
+    });
+});
+</script>
+
+</body>
+</html>

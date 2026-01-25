@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users | Admin Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Manage Users</h1>
+</header>
+
+<nav>
+    <a href="/admin">Dashboard</a>
+    <a href="#">Manage Users</a>
+    <a href="/admin/assign">Assign Patients</a>
+    <a href="/login">Logout</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h3>All Users</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <tr><td colspan="5" style="text-align:center;">Loading users...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>Add / Edit User</h3>
+        <form id="userForm">
+            <input type="hidden" id="user_id">
+
+            <label>Full Name</label>
+            <input type="text" id="name" required>
+
+            <label>Email</label>
+            <input type="email" id="email" required>
+
+            <label>Role</label>
+            <select id="role" required>
+                <option value="">Select Role</option>
+                <option>Admin</option>
+                <option>Doctor</option>
+                <option>Nurse</option>
+                <option>Patient</option>
+            </select>
+
+            <label>Password</label>
+            <input type="password" id="password">
+
+            <button type="submit" class="btn">Save User</button>
+            <button type="button" class="btn" id="clearBtn">Clear Form</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 Live Patient Monitoring System</p>
+</footer>
+
+<script>
+// ✅ Load users from DB
+function loadUsers() {
+    fetch("/admin/users/data")
+    .then(res => res.json())
+    .then(data => {
+        const table = document.getElementById("userTable");
+        table.innerHTML = "";
+        data.forEach(u => {
+            table.innerHTML += `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td>${u.role}</td>
+                    <td>
+                        <button class="btn" onclick="editUser('${u.id}')">Edit</button>
+                        <button class="btn-danger"onclick="deleteUser('${u.id}')">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+// Edit user
+function editUser(id) {
+    fetch(`/admin/user/${id}`)
+    .then(res => res.json())
+    .then(u => {
+        document.getElementById("user_id").value = u.id;
+        document.getElementById("name").value = u.name;
+        document.getElementById("email").value = u.email;
+        document.getElementById("role").value = u.role;
+    });
+}
+
+// Delete user
+function deleteUser(id) {
+    if (!confirm("Are you sure to delete this user?")) return;
+    fetch(`/admin/user/delete/${id}`, { method: "DELETE" })
+    .then(res => res.json())
+    .then(msg => {
+        alert(msg.message);
+        loadUsers();
+    });
+}
+
+// Add / Update user
+document.getElementById("userForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const userId = document.getElementById("user_id").value;
+    const payload = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        role: document.getElementById("role").value,
+        password: document.getElementById("password").value
+    };
+    const url = userId ? `/admin/user/update/${userId}` : `/admin/user/add`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(msg => {
+        alert(msg.message);
+        this.reset();
+        loadUsers();
+    });
+});
+
+// Clear form
+document.getElementById("clearBtn").addEventListener("click", function(){
+    document.getElementById("userForm").reset();
+    document.getElementById("user_id").value = "";
+});
+
+// Initial load
+window.onload = loadUsers;
+</script>
+
+</body>
+</html>
