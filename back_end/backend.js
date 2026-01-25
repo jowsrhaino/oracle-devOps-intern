@@ -10,6 +10,12 @@ const router = express.Router();
 const app = express();
 const session = require("express-session");
 
+mongoose.connect("mongodb://127.0.0.1:27017/live_patient_monitoring")
+.then(() =>{ console.log("✅ MongoDB Connected")
+    ensureAdmin();
+})
+.catch(err => console.log(err));
+
 app.use(session({
     secret: "your-secret-key",  // எந்தவொரு secret key
     resave: false,
@@ -44,11 +50,7 @@ async function ensureAdmin() {
     }
 }
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/live_patient_monitoring")
-.then(() =>{ console.log("✅ MongoDB Connected")
-    ensureAdmin();
-})
-.catch(err => console.log(err));
+
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, "../front_end")));
