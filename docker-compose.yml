@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: live-patient-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - live-net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./back_end
+      dockerfile: Dockerfile
+    container_name: live-patient-app
+    ports:
+      - "5000:5000"
+    networks:
+      - live-net
+    depends_on:
+      - mongo
+
+networks:
+  live-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
