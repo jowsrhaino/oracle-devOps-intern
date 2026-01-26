@@ -3,13 +3,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const User = require("./models/User");
-
 const router = express.Router();
-
-
 const app = express();
 const session = require("express-session");
-
+const client = require("prom-client");
 app.use(session({
     secret: "your-secret-key",  // எந்தவொரு secret key
     resave: false,
@@ -20,7 +17,6 @@ app.use(session({
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // body-parser not needed (modern Express)
-
 
 
 async function ensureAdmin() {
@@ -44,7 +40,7 @@ async function ensureAdmin() {
     }
 }
 // MongoDB connection
-mongoose.connect("mongodb://mongo-db:27017/live_patient_monitoring")
+mongoose.connect("mongodb://mongo:27017/livepatient")
   .then(() => {
       console.log("✅ MongoDB Connected");
       ensureAdmin();
@@ -52,14 +48,15 @@ mongoose.connect("mongodb://mongo-db:27017/live_patient_monitoring")
   .catch(err => console.log("❌ MongoDB connection error:", err));
 
 
+
 // Serve frontend files
-app.use(express.static(path.join(__dirname, "../front_end")));
+app.use(express.static(path.join(__dirname, "../front_end/")));
 
 
 
 // Home page
 app.get("/", (req, res) => {
-    res.sendFile("home.html", { root: path.join(__dirname, "../front_end/") });
+    res.sendFile(path.join(__dirname, "../front_end/home.html"));
     
 });
 
@@ -694,6 +691,14 @@ app.get("/live-vitals/:patientId", async (req, res) => {
 
 
 
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
+
+
+
 module.exports = router;
 app.use(router);
 
@@ -709,6 +714,6 @@ app.get("/patient_dashboard",(req,res)=>{
 app.use(router);
 // Start server
 const PORT = 5000;
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
 });
