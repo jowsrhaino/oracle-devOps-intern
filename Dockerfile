@@ -4,20 +4,21 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
+# Copy backend package.json and install dependencies
+COPY back_end/package*.json ./
 RUN npm install
 
 # Copy backend code
-COPY ./back_end ./back_end
+COPY back_end/ ./back_end/
 
-# 🔥 COPY FRONTEND ALSO (THIS WAS MISSING)
-COPY ./front_end ./front_end
+# Copy frontend code
+COPY front_end/ ./front_end/
 
-# Expose port
+# MongoDB URI
+ENV MONGO_URI=mongodb://mongo:27017/livepatient
+
+# Expose backend port
 EXPOSE 5000
 
-# Run backend
+# Start server
 CMD ["node", "back_end/backend.js"]
